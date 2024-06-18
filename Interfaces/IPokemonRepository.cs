@@ -1,4 +1,5 @@
-﻿using ThePokemonProject.Models;
+﻿using ThePokemonProject.Dto;
+using ThePokemonProject.Models;
 
 namespace ThePokemonProject.Interfaces
 {
@@ -11,7 +12,7 @@ namespace ThePokemonProject.Interfaces
         bool PokemonExists(int pokeId);
         bool CreatePokemon(int ownerId, int categoryId, Pokemon pokemon);
         bool UpdatePokemon(int ownerId, int categoryId, Pokemon pokemon);
-        bool DeletePokemon(Pokemon pokemon);
+        bool DeletePokemon(PokemonDto pokemon);
         bool Save();
     }
 }

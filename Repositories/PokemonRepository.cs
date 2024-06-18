@@ -1,4 +1,5 @@
 ﻿using ThePokemonProject.Data;
+using ThePokemonProject.Dto;
 using ThePokemonProject.Interfaces;
 using ThePokemonProject.Models;
 
@@ -32,11 +33,13 @@ namespace ThePokemonProject.Repositories
             return Save();
         }
 
-        public bool DeletePokemon(Pokemon pokemon)
+        public bool DeletePokemon(PokemonDto pokemon)
         {
            _dataContext.Remove(pokemon);
             return Save();
         }
+
+     
 
         public Pokemon GetPokemon(int id)
         {
