@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using ThePokemonProject.Dto;
 using ThePokemonProject.Interfaces;
 using ThePokemonProject.Models;
-using ThePokemonProject.Repositories;
+using ThePokemonProject.Services.Queries;
 
 namespace ThePokemonProject.Controllers
 {
@@ -17,19 +17,21 @@ namespace ThePokemonProject.Controllers
         private readonly IOwnerRepository _ownerRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
-
-        public PokemonController(IPokemonRepository pokemonRepository,IReviewRepository reviewRepository, IOwnerRepository ownerRepository, ICategoryRepository categoryRepository, IMapper mapper)
+        private readonly IMediator _mediator;
+        public PokemonController(IMediator mediator ,IPokemonRepository pokemonRepository,IReviewRepository reviewRepository, IOwnerRepository ownerRepository, ICategoryRepository categoryRepository, IMapper mapper)
         {
-            this._pokemonRepository = pokemonRepository;
-            this._reviewRepository = reviewRepository;
-            this._ownerRepository = ownerRepository;
-            this._categoryRepository = categoryRepository;
+            _pokemonRepository = pokemonRepository;
+            _reviewRepository = reviewRepository;
+            _mediator = mediator;
+            ////////this._ownerRepository = ownerRepository;
+            ////////this._categoryRepository = categoryRepository;
             this._mapper = mapper;
         }
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Pokemon>))]
-        public IActionResult GetPokemons()
+        public  IActionResult GetPokemons()
         {
+           
             var pokemons = _mapper.Map<List<PokemonDto>>(_pokemonRepository.GetPokemons());
             if (!ModelState.IsValid)
             {
@@ -40,16 +42,14 @@ namespace ThePokemonProject.Controllers
         [HttpGet("{pokeId}")]
         [ProducesResponseType(200, Type = typeof(Pokemon))]
         [ProducesResponseType(400)]
-        public IActionResult GetPokemon(int pokeId)
+        public async Task <IActionResult> GetPokemon(int pokeId)
         {
-            if (!_pokemonRepository.PokemonExists(pokeId))
-                return NotFound();
-            var pokemon = _mapper.Map<PokemonDto>(_pokemonRepository.GetPokemon(pokeId));
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-            return Ok(pokemon);
+            var request = new GetPokemonQuery(pokeId);
+         
+          
+           // var pokemon = _mapper.Map<PokemonDto>(_pokemonRepository.GetPokemon(pokeId));
+           
+           
         }
         [HttpGet("pokeId/ratings")]
         [ProducesResponseType(200, Type = typeof(Pokemon))]

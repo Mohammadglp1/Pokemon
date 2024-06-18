@@ -1,4 +1,9 @@
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json.Serialization;
 using ThePokemonProject.Data;
 using ThePokemonProject.Interfaces;
@@ -13,15 +18,16 @@ namespace ThePokemonProject
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
+             
             builder.Services.AddControllers();
+            builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(Program).Assembly));
             builder.Services.AddTransient<Seed>();
             builder.Services.AddControllers().AddJsonOptions(x =>
                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             builder.Services.AddScoped<IPokemonRepository, PokemonRepository>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-            builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
+            builder.Services.AddScoped<IOwnerRepository, OwnerRepository>(); 
             builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
             builder.Services.AddScoped<IReviewerRepository, ReviewerRepository>();
             builder.Services.AddScoped<ICountryRepository, CountryRepository>();

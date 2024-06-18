@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using ThePokemonProject.Dto;
 using ThePokemonProject.Interfaces;
 using ThePokemonProject.Models;
 using ThePokemonProject.Repositories;
+using ThePokemonProject.Services.Queries;
 
 namespace ThePokemonProject.Controllers
 {
@@ -11,11 +13,13 @@ namespace ThePokemonProject.Controllers
     [ApiController]
     public class CategoryController : Controller
     {
+        private readonly IMediator _mediator;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
 
-        public CategoryController(ICategoryRepository categoryRepository, IMapper mapper)
+        public CategoryController(IMediator mediator ,ICategoryRepository categoryRepository, IMapper mapper)
         {
+            _mediator = mediator;
             _categoryRepository = categoryRepository;
             _mapper = mapper;
         }
@@ -33,11 +37,13 @@ namespace ThePokemonProject.Controllers
         [HttpGet("{categoryId}")]
         [ProducesResponseType(200, Type = typeof(Category))]
         [ProducesResponseType(400)]
-        public IActionResult GetCategory(int categoryId)
+        public async Task <IActionResult> GetCategory(int categoryId)
         {
+            var request = new GetCategoryQuery(categoryId);
+            var category = await _mediator.Send(request);
             if (!_categoryRepository.CategoryExists(categoryId))
                 return NotFound();
-            var category = _mapper.Map<CategoryDto>(_categoryRepository.GetCategory(categoryId));
+         //   var category = _mapper.Map<CategoryDto>(_categoryRepository.GetCategory(categoryId));
             if (!ModelState.IsValid)
             {
                 return BadRequest();

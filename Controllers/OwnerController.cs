@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using ThePokemonProject.Dto;
 using ThePokemonProject.Interfaces;
 using ThePokemonProject.Models;
 using ThePokemonProject.Repositories;
+using ThePokemonProject.Services.Queries;
 
 namespace ThePokemonProject.Controllers
 {
@@ -11,12 +13,14 @@ namespace ThePokemonProject.Controllers
     [ApiController]
     public class OwnerController : Controller
     {
+        private readonly IMediator _mediator;
         private readonly IOwnerRepository _ownerRepository;
         private readonly ICountryRepository _countryRepository;
         private readonly IMapper _mapper;
 
-        public OwnerController(IOwnerRepository ownerRepository,ICountryRepository countryRepository, IMapper mapper)
+        public OwnerController(IMediator mediator ,IOwnerRepository ownerRepository,ICountryRepository countryRepository, IMapper mapper)
         {
+            _mediator = mediator;
             _ownerRepository = ownerRepository;
             _countryRepository = countryRepository;
             _mapper = mapper;
@@ -24,7 +28,7 @@ namespace ThePokemonProject.Controllers
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Owner>))]
         public IActionResult GetOwners()
-        {
+        { 
             var owners = _mapper.Map<List<OwnerDto>>(_ownerRepository.GetOwners());
             if (!ModelState.IsValid)
             {
@@ -35,11 +39,13 @@ namespace ThePokemonProject.Controllers
         [HttpGet("{ownerId}")]
         [ProducesResponseType(200, Type = typeof(Owner))]
         [ProducesResponseType(400)]
-        public IActionResult GetOwner(int ownerId)
+        public async Task<IActionResult> GetOwnerAsync(int ownerId)
         {
-            if (!_ownerRepository.OwnerExists(ownerId))
-                return NotFound();
-            var owner = _mapper.Map<OwnerDto>(_ownerRepository.GetOwner(ownerId));
+            var request = new GetOwnerQuery(ownerId);
+            var owner = await _mediator.Send(request);
+           // if (!_ownerRepository.OwnerExists(ownerId))
+           //     return NotFound();
+          //  var owner = _mapper.Map<OwnerDto>(_ownerRepository.GetOwner(ownerId));
             if (!ModelState.IsValid)
             {
                 return BadRequest();
@@ -48,14 +54,14 @@ namespace ThePokemonProject.Controllers
         }
         [HttpGet("pokemon/{ownerId}")]
         [ProducesResponseType(200, Type = typeof(Pokemon))]
-        [ProducesResponseType(400)]
-        public IActionResult GetPokemonByOwner(int ownerId)
-        {
-            if (!_ownerRepository.OwnerExists(ownerId))
-                return NotFound();                           
+        [ProducesResponseType(400)]          
+        public IActionResult GetPokemonByOwner(int ownerId)  
+        {                                                    
+            if (!_ownerRepository.OwnerExists(ownerId))         
+                return NotFound();                             
             var pokemons = _mapper.Map<List<PokemonDto>>(_ownerRepository.GetPokemonByOwner(ownerId));
             if (!ModelState.IsValid)                   
-            {
+            {                                                 
                 return BadRequest();
             }
             return Ok(pokemons);
