@@ -1,0 +1,8 @@
+c:\Users\Lenovo\source\repos\Pokemon\obj\Debug\net6.0\ThePokemonProject.csproj.AssemblyReference.cache
+c:\Users\Lenovo\source\repos\Pokemon\obj\Debug\net6.0\ThePokemonProject.GeneratedMSBuildEditorConfig.editorconfig
+c:\Users\Lenovo\source\repos\Pokemon\obj\Debug\net6.0\ThePokemonProject.AssemblyInfoInputs.cache
+c:\Users\Lenovo\source\repos\Pokemon\obj\Debug\net6.0\ThePokemonProject.AssemblyInfo.cs
+c:\Users\Lenovo\source\repos\Pokemon\obj\Debug\net6.0\ThePokemonProject.csproj.CoreCompileInputs.cache
+c:\Users\Lenovo\source\repos\Pokemon\obj\Debug\net6.0\ThePokemonProject.MvcApplicationPartsAssemblyInfo.cs
+c:\Users\Lenovo\source\repos\Pokemon\obj\Debug\net6.0\ThePokemonProject.MvcApplicationPartsAssemblyInfo.cache
+c:\Users\Lenovo\source\repos\Pokemon\obj\Debug\net6.0\ThePokemonProject.sourcelink.json
