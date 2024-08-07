@@ -1,7 +1,7 @@
 using System.Reflection.Metadata.Ecma335;
 using Ardalis.ApiEndpoints;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;fdhbf
+using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using ThePokemonProject.Dto;
 using ThePokemonProject.Services.Queries;
